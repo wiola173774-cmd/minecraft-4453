@@ -1,0 +1,27 @@
+name: Build Minecraft World
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build world
+        run: |
+          chmod +x generate_world.sh
+          ./generate_world.sh
+      - name: Upload world ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: Absurd_1.20.1_Forge_World
+          path: dist/Absurd_1.20.1_Forge_World.zip
+          if-no-files-found: error
+          retention-days: 90
